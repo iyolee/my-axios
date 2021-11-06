@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>my-axios</title>
+</head>
+
+<body>
+  <button id="cancelBtn">取消 count</button>
+  <button id="cancelBtn2">取消 famousInfo</button>
+  <script type="module">
+    import Axios from './lib/axiosInstance.js'
+    Axios.interceptors.request.use(function fn1(config) {
+      console.log("拦截1");
+      return config;
+    }, function fn1(error) {
+      return Promise.reject(error);
+    });
+    Axios.interceptors.request.use(function fn2(config) {
+      console.log("拦截2");
+      return config;
+    }, function fn2(error) {
+      return Promise.reject(error);
+    });
+
+    Axios.interceptors.response.use(function p1(response) {
+      console.log("完成1");
+      return response;
+    }, function p1(error) {
+      return Promise.reject(error);
+    });
+    Axios.interceptors.response.use(function p2(response) {
+      console.log("完成2");
+      return response;
+    }, function p2(error) {
+      return Promise.reject(error);
+    });
+
+
+    const source = Axios.CancelToken.source();
+    Axios({ method: 'get', url: "http://localhost:8081/api/famousInfo", cancelToken: source.token }).then(res => {
+      console.log(res);
+    }, error => {
+      console.log(error);
+    });
+    Axios.get("http://localhost:8081/api/famousInfo").then(res => {
+      console.log(res);
+    }, error => {
+      console.log(error);
+    });
+    document.getElementById("cancelBtn").addEventListener("click", () => {
+      source.cancel();
+    });
+
+
+
+  </script>
+</body>
+
+</html>
